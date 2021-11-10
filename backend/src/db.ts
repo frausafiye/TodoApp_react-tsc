@@ -1,6 +1,3 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import {
   collection,
   doc,
@@ -10,19 +7,7 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
-//Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
-  authDomain: "deft-effect-295213.firebaseapp.com",
-  projectId: "deft-effect-295213",
-  storageBucket: "deft-effect-295213.appspot.com",
-  messagingSenderId: "943567395085",
-  appId: "1:943567395085:web:8e13067bc411a65262b844",
-};
-// Initialize Firebase
-const firebase = initializeApp(firebaseConfig);
-export const db = getFirestore();
-
+import { db } from "./app";
 export const saveDocument = async function (
   collectionName: string,
   obj: Object
@@ -109,6 +94,3 @@ export const deleteDocument = async function (
     return { success: false, error: error };
   }
 };
-
-//call the functions like below:
-//saveDocument("user", new User("Jhon", "NY"));

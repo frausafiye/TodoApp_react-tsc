@@ -3,11 +3,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.db = void 0;
 const express_1 = __importDefault(require("express"));
+// import cors from "cors";
 const body_parser_1 = require("body-parser");
 const app = express_1.default();
+const cookieParser = require("cookie-parser");
 app.use(body_parser_1.json());
+app.use(cookieParser());
 // app.use(cors);
+//firebase initializing
+const app_1 = require("firebase/app");
+const firestore_1 = require("firebase/firestore");
+const firebaseConfig = {
+    apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
+    authDomain: "deft-effect-295213.firebaseapp.com",
+    projectId: "deft-effect-295213",
+    storageBucket: "deft-effect-295213.appspot.com",
+    messagingSenderId: "943567395085",
+    appId: "1:943567395085:web:8e13067bc411a65262b844",
+};
+const firebase2 = app_1.initializeApp(firebaseConfig);
+exports.db = firestore_1.getFirestore();
 //routes
 const todos_1 = __importDefault(require("./routes/todos"));
 const users_1 = __importDefault(require("./routes/users"));
@@ -23,6 +40,9 @@ const setCors = (req, res, next) => {
     next();
 };
 app.use(setCors);
+// app.all("*",(req: Request, res: Response, next: NextFunction)=>{
+//   res.cookie() set cookie to all request???
+// })
 app.use("/todos", todos_1.default);
 app.use("/users", users_1.default);
 app.use((req, res, next) => {

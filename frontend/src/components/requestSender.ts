@@ -14,6 +14,7 @@ export const requestSender = async (
       // headers: {
       //   Accept: "application/json",
       //   "Content-Type": "application/json",
+      //AuthToken:""...from user.token
       // },
       data: obj ? obj.body : null,
     });
@@ -21,5 +22,6 @@ export const requestSender = async (
     return response.data;
   } catch (err) {
     console.log(err);
+    return { error: err };
   }
 };

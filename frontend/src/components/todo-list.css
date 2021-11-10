@@ -1,4 +1,5 @@
-ul {
+.todo-list,
+.dones-list {
   list-style: none;
   width: 90%;
   max-width: 40rem;
@@ -14,7 +15,8 @@ ul {
   background-color: rgb(184, 158, 207);
 }
 
-li {
+.todo-list li,
+.dones-list li {
   margin: 1rem 0;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);

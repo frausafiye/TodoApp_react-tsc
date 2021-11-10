@@ -1,26 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteDocument = exports.updateDocument = exports.getSingleDocument = exports.getDocumentsFromCollection = exports.saveDocument = exports.db = void 0;
-// Import the functions you need from the SDKs you need
-const app_1 = require("firebase/app");
+exports.deleteDocument = exports.updateDocument = exports.getSingleDocument = exports.getDocumentsFromCollection = exports.saveDocument = void 0;
 const firestore_1 = require("firebase/firestore");
-const firestore_2 = require("firebase/firestore");
-//Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
-    authDomain: "deft-effect-295213.firebaseapp.com",
-    projectId: "deft-effect-295213",
-    storageBucket: "deft-effect-295213.appspot.com",
-    messagingSenderId: "943567395085",
-    appId: "1:943567395085:web:8e13067bc411a65262b844",
-};
-// Initialize Firebase
-const firebase = app_1.initializeApp(firebaseConfig);
-exports.db = firestore_1.getFirestore();
+const app_1 = require("./app");
 const saveDocument = async function (collectionName, obj) {
     try {
         console.log(obj);
-        const docRef = await firestore_2.addDoc(firestore_2.collection(exports.db, collectionName), { ...obj });
+        const docRef = await firestore_1.addDoc(firestore_1.collection(app_1.db, collectionName), { ...obj });
         console.log("Document written with ID: ", docRef.id);
         return { success: true, data: { id: docRef.id, ...obj } };
     }
@@ -31,7 +17,7 @@ const saveDocument = async function (collectionName, obj) {
 exports.saveDocument = saveDocument;
 const getDocumentsFromCollection = async function (collectionName) {
     try {
-        const querySnapshot = await firestore_2.getDocs(firestore_2.collection(exports.db, collectionName));
+        const querySnapshot = await firestore_1.getDocs(firestore_1.collection(app_1.db, collectionName));
         const tempDoc = querySnapshot.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
         });
@@ -45,8 +31,8 @@ const getDocumentsFromCollection = async function (collectionName) {
 exports.getDocumentsFromCollection = getDocumentsFromCollection;
 const getSingleDocument = async function (collectionName, obj) {
     try {
-        const docRef = firestore_2.doc(exports.db, collectionName, obj.id);
-        const docSnap = await firestore_2.getDoc(docRef);
+        const docRef = firestore_1.doc(app_1.db, collectionName, obj.id);
+        const docSnap = await firestore_1.getDoc(docRef);
         if (docSnap.exists()) {
             return { success: true, data: { id: docSnap.id, ...docSnap.data() } };
         }
@@ -66,8 +52,8 @@ const updateDocument = async function (collectionName, obj) {
         const { id, ...newObj } = obj;
         console.log(obj);
         console.log(newObj);
-        const docRef = firestore_2.doc(exports.db, collectionName, id);
-        await firestore_2.updateDoc(docRef, {
+        const docRef = firestore_1.doc(app_1.db, collectionName, id);
+        await firestore_1.updateDoc(docRef, {
             ...newObj,
         });
         return { success: true, data: obj };
@@ -82,7 +68,7 @@ const deleteDocument = async function (collectionName, obj) {
         console.log(collectionName, obj);
         const document = await exports.getSingleDocument(collectionName, obj);
         if (document.success) {
-            await firestore_2.deleteDoc(firestore_2.doc(exports.db, collectionName, document.data.id));
+            await firestore_1.deleteDoc(firestore_1.doc(app_1.db, collectionName, document.data.id));
             return { success: true, data: document.data };
         }
         else {
@@ -95,5 +81,3 @@ const deleteDocument = async function (collectionName, obj) {
     }
 };
 exports.deleteDocument = deleteDocument;
-//call the functions like below:
-//saveDocument("user", new User("Jhon", "NY"));

@@ -1,9 +1,25 @@
 import express, { Request, Response, NextFunction } from "express";
-import cors from "cors";
+// import cors from "cors";
 import { json } from "body-parser";
 const app = express();
+const cookieParser = require("cookie-parser");
 app.use(json());
+app.use(cookieParser());
 // app.use(cors);
+
+//firebase initializing
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
+  authDomain: "deft-effect-295213.firebaseapp.com",
+  projectId: "deft-effect-295213",
+  storageBucket: "deft-effect-295213.appspot.com",
+  messagingSenderId: "943567395085",
+  appId: "1:943567395085:web:8e13067bc411a65262b844",
+};
+const firebase2 = initializeApp(firebaseConfig);
+export const db = getFirestore();
 
 //routes
 import todoRoutes from "./routes/todos";
@@ -27,6 +43,10 @@ const setCors = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 app.use(setCors);
+
+// app.all("*",(req: Request, res: Response, next: NextFunction)=>{
+//   res.cookie() set cookie to all request???
+// })
 
 app.use("/todos", todoRoutes);
 app.use("/users", userRoutes);
