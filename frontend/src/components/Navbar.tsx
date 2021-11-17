@@ -15,7 +15,10 @@ export default function Navbar() {
   return (
     <div className="navbar">
       <nav>
-        <ul style={{ display: "flex" }}>
+        <ul
+          style={{ display: "flex" }}
+          className={!currentUser ? "extendedNavList" : undefined}
+        >
           {currentUser ? (
             <li>
               <button onClick={logoutGoogle}>Logout</button>
@@ -24,12 +27,7 @@ export default function Navbar() {
             <>
               <li>
                 <Link to="/login">
-                  <button>Login </button>
-                </Link>
-              </li>
-              <li className="right-side">
-                <Link to="/signup">
-                  <button>Sign up </button>
+                  <button>Login or Sign up </button>
                 </Link>
               </li>
             </>

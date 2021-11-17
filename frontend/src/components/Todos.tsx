@@ -4,14 +4,11 @@ import NewTodo from "./NewTodo";
 import { requestSender } from "./requestSender";
 import { Todo } from "./todo.model";
 import TodoList from "./TodoList";
-import { onAuthStateChanged } from "firebase/auth";
-import auth from "../config/firebase-config";
 import { AuthContext } from "../context/AuthContext";
+import "./todo-list.css";
 
-interface Props {}
-
-export default function Todos({}: Props): ReactElement {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+export default function Todos(): ReactElement {
+  const { token } = useContext(AuthContext);
   const [todos, setTodos] = useState<Todo[]>([
     // { id: "t1", text: "Finish the project", done: true },
   ]);
@@ -22,51 +19,54 @@ export default function Todos({}: Props): ReactElement {
   const doneItems = [...todos].filter((todoItem) => {
     return todoItem.done === true;
   });
-  const fetchAndSetTodos = async () => {
-    const response = await requestSender("todos", "get", {
-      body: null,
-      params: "",
-    });
+  const fetchAndSetTodos = async (token: string) => {
+    const response = await requestSender(
+      "todos",
+      "get",
+      {
+        body: null,
+        params: "",
+      },
+      token
+    );
     if (response.success) {
       setTodos(response.document);
     } else {
       console.log(response.error);
     }
   };
-  useEffect(() => {
-    fetchAndSetTodos();
-    onAuthStateChanged(auth, (returnUser) => {
-      if (returnUser) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = returnUser.uid;
-        console.log(returnUser);
-        setCurrentUser(returnUser);
-        // ...
-      } else {
-        // User is signed out
-        console.log("user signed out");
-      }
-    });
-  }, []);
+
   const addHandler = async (text: string) => {
-    const response = await requestSender("todos", "post", {
-      body: { text: text, done: false },
-      params: "",
-    });
+    const response = await requestSender(
+      "todos",
+      "post",
+      {
+        body: { text: text, done: false },
+        params: "",
+      },
+      token
+    );
+    console.log(response);
     if (response.success) {
-      fetchAndSetTodos();
+      fetchAndSetTodos(token);
     } else {
       console.log(response.error);
     }
   };
   const deleteHandler = async (id: string) => {
-    const response = await requestSender("todos", "delete", {
-      body: null,
-      params: id,
-    });
+    console.log(id);
+    const response = await requestSender(
+      "todos",
+      "delete",
+      {
+        body: null,
+        params: id,
+      },
+      token
+    );
+    console.log(response);
     if (response.success) {
-      fetchAndSetTodos();
+      fetchAndSetTodos(token);
     } else {
       console.log(response.error);
     }
@@ -74,16 +74,28 @@ export default function Todos({}: Props): ReactElement {
   const updateHandler = async (id: string) => {
     const item = todos.find((element) => element.id === id)!;
     const newStatus = !item.done;
-    const response = await requestSender("todos", "patch", {
-      body: { text: item.text, done: newStatus },
-      params: id,
-    });
+    const response = await requestSender(
+      "todos",
+      "patch",
+      {
+        body: { text: item.text, done: newStatus },
+        params: id,
+      },
+      token
+    );
     if (response.success) {
-      fetchAndSetTodos();
+      fetchAndSetTodos(token);
     } else {
       console.log(response.error);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      fetchAndSetTodos(token);
+    }
+  }, [token]);
+
   return (
     <>
       <NewTodo addItems={addHandler} />

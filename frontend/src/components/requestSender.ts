@@ -3,7 +3,8 @@ import axios from "axios";
 export const requestSender = async (
   routeName: string,
   method: "get" | "post" | "patch" | "delete",
-  obj: { body: object | null; params: string }
+  obj: { body: object | null; params: string },
+  token?: string
 ) => {
   try {
     let route = routeName === "" ? "/" : `/${routeName}/`;
@@ -11,17 +12,15 @@ export const requestSender = async (
       method: method,
       withCredentials: true,
       url: `${process.env.REACT_APP_BASE_URL}${route}${obj.params}`,
-      // headers: {
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json",
-      //AuthToken:""...from user.token
-      // },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       data: obj ? obj.body : null,
     });
-
     return response.data;
   } catch (err) {
-    console.log(err);
     return { error: err };
   }
 };

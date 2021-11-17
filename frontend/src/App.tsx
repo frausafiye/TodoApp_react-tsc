@@ -1,18 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Loginform from "./components/Loginform";
-import AuthContextProvider, {
-  AuthContext,
-  useAuth,
-} from "./context/AuthContext";
-import { HashRouter, Routes, Route } from "react-router-dom";
-import SignUpform from "./components/Signupform";
 import Todos from "./components/Todos";
 import Navbar from "./components/Navbar";
+import { AuthContext } from "./context/AuthContext";
+import auth from "./config/firebase-config";
+import { HashRouter, Routes, Route } from "react-router-dom";
+
+import { onAuthStateChanged } from "firebase/auth";
 
 const App: React.FC = () => {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
-  console.log(currentUser);
-
+  const { currentUser, setCurrentUser, setToken } = useContext(AuthContext);
+  useEffect(() => {
+    onAuthStateChanged(auth, (returnUser) => {
+      if (returnUser) {
+        // User is signed in
+        // const uid = returnUser.uid;
+        if (!currentUser) {
+          setCurrentUser(returnUser);
+        }
+        returnUser.getIdToken().then((token) => {
+          setToken(token);
+        });
+      }
+    });
+  }, []);
   return (
     <HashRouter>
       <div className="App">
@@ -22,12 +33,11 @@ const App: React.FC = () => {
             element={
               <>
                 <Navbar />
-                <Todos />
+                {currentUser && <Todos />}
               </>
             }
           />
           <Route path="/login" element={<Loginform />} />
-          <Route path="/signup" element={<SignUpform />} />
         </Routes>
       </div>
     </HashRouter>

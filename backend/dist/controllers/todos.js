@@ -4,10 +4,10 @@ exports.deleteTodo = exports.updateTodo = exports.getSingleTodo = exports.getTod
 const todo_1 = require("../models/todo");
 const db_1 = require("../db");
 const createTodo = async (req, res, next) => {
-    //
     try {
         const text = req.body.text;
-        const document = await db_1.saveDocument("todos", new todo_1.Todo(text, false));
+        const userId = req["user"];
+        const document = await db_1.saveDocument("todos", new todo_1.Todo(text, false, userId));
         req.body.document = document;
         req.body.message = "new todo saved into db";
         next();
@@ -18,9 +18,9 @@ const createTodo = async (req, res, next) => {
 };
 exports.createTodo = createTodo;
 const getTodos = async (req, res, next) => {
-    //
+    const userId = req["user"];
     try {
-        const documents = await db_1.getDocumentsFromCollection("todos");
+        const documents = await db_1.getDocumentsFromCollection("todos", userId);
         req.body.document = documents;
         req.body.message = "todos sent";
         next();
@@ -48,12 +48,13 @@ exports.getSingleTodo = getSingleTodo;
 const updateTodo = async (req, res, next) => {
     try {
         const { id } = req.params;
-        console.log(id);
+        const userId = req["user"];
         const { text, done } = req.body;
         const documentObj = {
             id: id,
             text: text,
             done: done,
+            userID: userId,
         };
         const document = await db_1.updateDocument("todos", documentObj);
         req.body.document = document;
@@ -67,7 +68,6 @@ const updateTodo = async (req, res, next) => {
 };
 exports.updateTodo = updateTodo;
 const deleteTodo = async (req, res, next) => {
-    //
     try {
         console.log("delete controller");
         const { id } = req.params;

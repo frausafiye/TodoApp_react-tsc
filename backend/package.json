@@ -4,7 +4,6 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon dist/app.js"
   },
   "author": "",
@@ -15,6 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^9.1.3",
+    "firebase-admin": "^10.0.0",
     "firebaseui": "^6.0.0"
   },
   "devDependencies": {

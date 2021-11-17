@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { nextTick } from "process";
 import {
   createTodo,
   deleteTodo,
@@ -6,10 +7,11 @@ import {
   getSingleTodo,
   updateTodo,
 } from "../controllers/todos";
+import middleware from "../middleware/authCheck";
 const router = Router();
-router.post("/", createTodo);
-router.get("/", getTodos);
-router.get("/:id", getSingleTodo);
-router.patch("/:id", updateTodo);
-router.delete("/:id", deleteTodo);
+router.post("/", middleware.decodetoken, createTodo);
+router.get("/", middleware.decodetoken, getTodos);
+router.get("/:id", middleware.decodetoken, getSingleTodo);
+router.patch("/:id", middleware.decodetoken, updateTodo);
+router.delete("/:id", middleware.decodetoken, deleteTodo);
 export default router;

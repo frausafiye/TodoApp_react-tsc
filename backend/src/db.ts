@@ -6,6 +6,8 @@ import {
   deleteDoc,
   updateDoc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "./app";
 export const saveDocument = async function (
@@ -13,9 +15,7 @@ export const saveDocument = async function (
   obj: Object
 ) {
   try {
-    console.log(obj);
     const docRef = await addDoc(collection(db, collectionName), { ...obj });
-    console.log("Document written with ID: ", docRef.id);
     return { success: true, data: { id: docRef.id, ...obj } };
   } catch (error) {
     return { success: false, error: error };
@@ -23,14 +23,15 @@ export const saveDocument = async function (
 };
 
 export const getDocumentsFromCollection = async function (
-  collectionName: string
+  collectionName: string,
+  id: string
 ) {
   try {
-    const querySnapshot = await getDocs(collection(db, collectionName));
+    const q = query(collection(db, collectionName), where("userID", "==", id));
+    const querySnapshot = await getDocs(q);
     const tempDoc = querySnapshot.docs.map((doc) => {
       return { id: doc.id, ...doc.data() };
     });
-    console.log(tempDoc);
     return { success: true, data: tempDoc };
   } catch (error) {
     return { success: false, error: error };
@@ -64,8 +65,6 @@ export const updateDocument = async function (
 ) {
   try {
     const { id, ...newObj } = obj;
-    console.log(obj);
-    console.log(newObj);
     const docRef = doc(db, collectionName, id);
     await updateDoc(docRef, {
       ...newObj,
@@ -81,11 +80,11 @@ export const deleteDocument = async function (
   obj: { id: string }
 ) {
   try {
-    console.log(collectionName, obj);
     const document = await getSingleDocument(collectionName, obj);
+    const documentData = document.data;
     if (document.success) {
       await deleteDoc(doc(db, collectionName, document.data!.id));
-      return { success: true, data: document.data };
+      return { success: true, data: documentData };
     } else {
       const error = new Error("no document found");
       return { success: false, error: error };

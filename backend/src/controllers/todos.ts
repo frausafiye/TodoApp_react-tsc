@@ -10,10 +10,10 @@ import {
 import { RequestHandler } from "express";
 
 export const createTodo: RequestHandler = async (req, res, next) => {
-  //
   try {
     const text = (req.body as { text: string }).text;
-    const document = await saveDocument("todos", new Todo(text, false));
+    const userId = req["user"];
+    const document = await saveDocument("todos", new Todo(text, false, userId));
     req.body.document = document;
     req.body.message = "new todo saved into db";
     next();
@@ -23,9 +23,9 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const getTodos: RequestHandler = async (req, res, next) => {
-  //
+  const userId = req["user"];
   try {
-    const documents = await getDocumentsFromCollection("todos");
+    const documents = await getDocumentsFromCollection("todos", userId);
     req.body.document = documents;
     req.body.message = "todos sent";
     next();
@@ -54,12 +54,13 @@ export const updateTodo: RequestHandler<{
 }> = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
+    const userId = req["user"];
     const { text, done } = req.body as { text?: string; done?: boolean };
     const documentObj = {
       id: id,
       text: text,
       done: done,
+      userID: userId,
     };
     const document = await updateDocument("todos", documentObj);
     req.body.document = document;
@@ -74,7 +75,6 @@ export const updateTodo: RequestHandler<{
 export const deleteTodo: RequestHandler<{
   id: string;
 }> = async (req, res, next) => {
-  //
   try {
     console.log("delete controller");
     const { id } = req.params;

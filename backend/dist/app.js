@@ -5,13 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const express_1 = __importDefault(require("express"));
-// import cors from "cors";
+//import cors from "cors";
 const body_parser_1 = require("body-parser");
 const app = express_1.default();
 const cookieParser = require("cookie-parser");
-app.use(body_parser_1.json());
-app.use(cookieParser());
-// app.use(cors);
 //firebase initializing
 const app_1 = require("firebase/app");
 const firestore_1 = require("firebase/firestore");
@@ -23,33 +20,32 @@ const firebaseConfig = {
     messagingSenderId: "943567395085",
     appId: "1:943567395085:web:8e13067bc411a65262b844",
 };
-const firebase2 = app_1.initializeApp(firebaseConfig);
+const firebase = app_1.initializeApp(firebaseConfig);
 exports.db = firestore_1.getFirestore();
 //routes
 const todos_1 = __importDefault(require("./routes/todos"));
-const users_1 = __importDefault(require("./routes/users"));
 const error_1 = __importDefault(require("./error"));
+//
 //cors:
 const setCors = (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Access,Authorization");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
     res.header("Access-Control-Expose-Headers", "*");
     res.header("Vary", "Origin");
     next();
 };
+app.use(body_parser_1.json());
+app.use(cookieParser());
+//app.use(cors);
 app.use(setCors);
-// app.all("*",(req: Request, res: Response, next: NextFunction)=>{
-//   res.cookie() set cookie to all request???
-// })
 app.use("/todos", todos_1.default);
-app.use("/users", users_1.default);
 app.use((req, res, next) => {
     //universal response sender:
     if (req.body.document) {
         if (req.body.document.success) {
-            res.status(201).send({
+            res.status(200).send({
                 success: true,
                 message: req.body.message,
                 document: req.body.document.data,

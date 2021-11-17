@@ -1,6 +1,6 @@
-//tsrafc=> tsc react arrow function shortcut!
 import React from "react";
-import "./todo-list.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt, faUndoAlt } from "@fortawesome/free-solid-svg-icons";
 interface DoneListProps {
   items: { id: string; text: string; done: boolean }[];
   deleteItems: (id: string) => void;
@@ -16,9 +16,11 @@ const DoneList: React.FC<DoneListProps> = (props) => {
             <span>{doneItem.text}</span>
             <div className="right-side">
               <button onClick={() => props.updateItem(doneItem.id)}>
-                Back
+                <FontAwesomeIcon icon={faUndoAlt} />
               </button>
-              <button onClick={() => props.deleteItems(doneItem.id)}>X</button>
+              <button onClick={() => props.deleteItems(doneItem.id)}>
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </button>
             </div>
           </li>
         ))}
