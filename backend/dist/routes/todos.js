@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const todos_1 = require("../controllers/todos");
 const authCheck_1 = __importDefault(require("../middleware/authCheck"));
-const router = express_1.Router();
+const router = (0, express_1.Router)();
 router.post("/", authCheck_1.default.decodetoken, todos_1.createTodo);
 router.get("/", authCheck_1.default.decodetoken, todos_1.getTodos);
 router.get("/:id", authCheck_1.default.decodetoken, todos_1.getSingleTodo);

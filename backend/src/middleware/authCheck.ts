@@ -4,18 +4,19 @@ import { Request, Response, NextFunction } from "express";
 const admin = require("../config/firebase-config");
 class Middleware {
   decodetoken = async (req: Request, res: Response, next: NextFunction) => {
-    console.log("here1");
     try {
       if (req.headers.authorization) {
-        console.log("here");
         const token = (<string>req.headers.authorization).split(" ")[1];
+        console.log("before");
         const decodeValue = await admin.auth().verifyIdToken(token);
-
+        console.log(decodeValue);
         if (decodeValue) {
+          console.log(decodeValue);
           const user = decodeValue;
           req["user"] = user.uid;
           next();
         } else {
+          console.log("unauthorized user");
           const error = new ErrorMiddleware("unauthorized user", 403);
           next(error);
         }
@@ -24,6 +25,7 @@ class Middleware {
         next(error);
       }
     } catch (err) {
+      console.log("an error accoured");
       next(err);
     }
   };

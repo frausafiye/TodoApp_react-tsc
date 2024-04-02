@@ -5,7 +5,7 @@ const firestore_1 = require("firebase/firestore");
 const app_1 = require("./app");
 const saveDocument = async function (collectionName, obj) {
     try {
-        const docRef = await firestore_1.addDoc(firestore_1.collection(app_1.db, collectionName), { ...obj });
+        const docRef = await (0, firestore_1.addDoc)((0, firestore_1.collection)(app_1.db, collectionName), { ...obj });
         return { success: true, data: { id: docRef.id, ...obj } };
     }
     catch (error) {
@@ -15,8 +15,8 @@ const saveDocument = async function (collectionName, obj) {
 exports.saveDocument = saveDocument;
 const getDocumentsFromCollection = async function (collectionName, id) {
     try {
-        const q = firestore_1.query(firestore_1.collection(app_1.db, collectionName), firestore_1.where("userID", "==", id));
-        const querySnapshot = await firestore_1.getDocs(q);
+        const q = (0, firestore_1.query)((0, firestore_1.collection)(app_1.db, collectionName), (0, firestore_1.where)("userID", "==", id));
+        const querySnapshot = await (0, firestore_1.getDocs)(q);
         const tempDoc = querySnapshot.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
         });
@@ -29,8 +29,8 @@ const getDocumentsFromCollection = async function (collectionName, id) {
 exports.getDocumentsFromCollection = getDocumentsFromCollection;
 const getSingleDocument = async function (collectionName, obj) {
     try {
-        const docRef = firestore_1.doc(app_1.db, collectionName, obj.id);
-        const docSnap = await firestore_1.getDoc(docRef);
+        const docRef = (0, firestore_1.doc)(app_1.db, collectionName, obj.id);
+        const docSnap = await (0, firestore_1.getDoc)(docRef);
         if (docSnap.exists()) {
             return { success: true, data: { id: docSnap.id, ...docSnap.data() } };
         }
@@ -48,8 +48,8 @@ exports.getSingleDocument = getSingleDocument;
 const updateDocument = async function (collectionName, obj) {
     try {
         const { id, ...newObj } = obj;
-        const docRef = firestore_1.doc(app_1.db, collectionName, id);
-        await firestore_1.updateDoc(docRef, {
+        const docRef = (0, firestore_1.doc)(app_1.db, collectionName, id);
+        await (0, firestore_1.updateDoc)(docRef, {
             ...newObj,
         });
         return { success: true, data: obj };
@@ -61,10 +61,10 @@ const updateDocument = async function (collectionName, obj) {
 exports.updateDocument = updateDocument;
 const deleteDocument = async function (collectionName, obj) {
     try {
-        const document = await exports.getSingleDocument(collectionName, obj);
+        const document = await (0, exports.getSingleDocument)(collectionName, obj);
         const documentData = document.data;
         if (document.success) {
-            await firestore_1.deleteDoc(firestore_1.doc(app_1.db, collectionName, document.data.id));
+            await (0, firestore_1.deleteDoc)((0, firestore_1.doc)(app_1.db, collectionName, document.data.id));
             return { success: true, data: documentData };
         }
         else {

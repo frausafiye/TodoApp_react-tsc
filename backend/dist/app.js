@@ -7,8 +7,8 @@ exports.db = void 0;
 const express_1 = __importDefault(require("express"));
 //import cors from "cors";
 const body_parser_1 = require("body-parser");
-const app = express_1.default();
-const cookieParser = require("cookie-parser");
+const app = (0, express_1.default)();
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 //firebase initializing
 const app_1 = require("firebase/app");
 const firestore_1 = require("firebase/firestore");
@@ -20,8 +20,9 @@ const firebaseConfig = {
     messagingSenderId: "943567395085",
     appId: "1:943567395085:web:8e13067bc411a65262b844",
 };
-const firebase = app_1.initializeApp(firebaseConfig);
-exports.db = firestore_1.getFirestore();
+// Initialize Firebase
+const firebase = (0, app_1.initializeApp)(firebaseConfig);
+exports.db = (0, firestore_1.getFirestore)();
 //routes
 const todos_1 = __importDefault(require("./routes/todos"));
 const error_1 = __importDefault(require("./error"));
@@ -36,8 +37,8 @@ const setCors = (req, res, next) => {
     res.header("Vary", "Origin");
     next();
 };
-app.use(body_parser_1.json());
-app.use(cookieParser());
+app.use((0, body_parser_1.json)());
+app.use((0, cookie_parser_1.default)());
 //app.use(cors);
 app.use(setCors);
 app.use("/todos", todos_1.default);
@@ -52,17 +53,20 @@ app.use((req, res, next) => {
             });
         }
         else {
+            console.log("here");
             next(req.body.document.error);
         }
         //route not found:
     }
     else {
+        console.log("hereeee");
         let error = new error_1.default("no matching routes found", 404);
         next(error);
     }
 });
 //universal error handler:
 app.use((err, req, res, next) => {
+    console.log("hereeeee");
     res
         .status(err.status || 500)
         .json({ success: false, message: err.message });

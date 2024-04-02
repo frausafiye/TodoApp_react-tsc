@@ -8,18 +8,20 @@ const admin = require("../config/firebase-config");
 class Middleware {
     constructor() {
         this.decodetoken = async (req, res, next) => {
-            console.log("here1");
             try {
                 if (req.headers.authorization) {
-                    console.log("here");
                     const token = req.headers.authorization.split(" ")[1];
+                    console.log("before");
                     const decodeValue = await admin.auth().verifyIdToken(token);
+                    console.log(decodeValue);
                     if (decodeValue) {
+                        console.log(decodeValue);
                         const user = decodeValue;
                         req["user"] = user.uid;
                         next();
                     }
                     else {
+                        console.log("unauthorized user");
                         const error = new error_1.default("unauthorized user", 403);
                         next(error);
                     }
@@ -30,6 +32,7 @@ class Middleware {
                 }
             }
             catch (err) {
+                console.log("an error accoured");
                 next(err);
             }
         };
