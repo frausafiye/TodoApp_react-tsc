@@ -7,7 +7,6 @@ class Middleware {
     try {
       if (req.headers.authorization) {
         const token = (<string>req.headers.authorization).split(" ")[1];
-        console.log("before");
         const decodeValue = await admin.auth().verifyIdToken(token);
         console.log(decodeValue);
         if (decodeValue) {
@@ -16,7 +15,6 @@ class Middleware {
           req["user"] = user.uid;
           next();
         } else {
-          console.log("unauthorized user");
           const error = new ErrorMiddleware("unauthorized user", 403);
           next(error);
         }
@@ -25,7 +23,6 @@ class Middleware {
         next(error);
       }
     } catch (err) {
-      console.log("an error accoured");
       next(err);
     }
   };

@@ -54,6 +54,7 @@ app.use((req, res, next) => {
         }
         else {
             console.log("here");
+            console.log();
             next(req.body.document.error);
         }
         //route not found:
@@ -66,7 +67,6 @@ app.use((req, res, next) => {
 });
 //universal error handler:
 app.use((err, req, res, next) => {
-    console.log("hereeeee");
     res
         .status(err.status || 500)
         .json({ success: false, message: err.message });

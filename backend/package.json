@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "tsc --watch & node --watch dist/app.js"
+    "start": "tsc && concurrently \"tsc -w\" \"nodemon dist/app.js\""
   },
   "author": "",
   "license": "ISC",

@@ -11,13 +11,17 @@ import { RequestHandler } from "express";
 
 export const createTodo: RequestHandler = async (req, res, next) => {
   try {
+    console.log("trying to create");
     const text = (req.body as { text: string }).text;
     const userId = req["user"];
     const document = await saveDocument("todos", new Todo(text, false, userId));
     req.body.document = document;
+    //@firebase/firestore: Firestore (9.1.3): Connection GRPC stream error. Code: 7 Message: 7 PERMISSION_DENIED: Missing or insufficient permissions.
+    console.log(req.body.document.success); //false
     req.body.message = "new todo saved into db";
     next();
   } catch (error) {
+    console.log("error in creating todo");
     next(error);
   }
 };

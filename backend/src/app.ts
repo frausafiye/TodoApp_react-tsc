@@ -58,6 +58,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       });
     } else {
       console.log("here");
+      console.log();
       next(req.body.document.error);
     }
     //route not found:
@@ -71,7 +72,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 //universal error handler:
 app.use(
   (err: ErrorMiddleware, req: Request, res: Response, next: NextFunction) => {
-    console.log("hereeeee");
     res
       .status(err.status || 500)
       .json({ success: false, message: err.message });
