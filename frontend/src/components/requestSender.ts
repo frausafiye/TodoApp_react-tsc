@@ -8,6 +8,7 @@ export const requestSender = async (
 ) => {
   try {
     let route = routeName === "" ? "/" : `/${routeName}/`;
+    console.log(`${process.env.REACT_APP_BASE_URL}`);
     const response = await axios({
       method: method,
       withCredentials: true,

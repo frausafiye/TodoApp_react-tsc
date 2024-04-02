@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 //import cors from "cors";
 import { json } from "body-parser";
 const app = express();
-const cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
 
 //firebase initializing
 import { initializeApp } from "firebase/app";
@@ -15,6 +15,8 @@ const firebaseConfig = {
   messagingSenderId: "943567395085",
   appId: "1:943567395085:web:8e13067bc411a65262b844",
 };
+
+// Initialize Firebase
 const firebase = initializeApp(firebaseConfig);
 export const db = getFirestore();
 
@@ -55,10 +57,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         document: req.body.document.data,
       });
     } else {
+      console.log("here");
       next(req.body.document.error);
     }
     //route not found:
   } else {
+    console.log("hereeee");
     let error = new ErrorMiddleware("no matching routes found", 404);
     next(error);
   }
@@ -67,6 +71,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 //universal error handler:
 app.use(
   (err: ErrorMiddleware, req: Request, res: Response, next: NextFunction) => {
+    console.log("hereeeee");
     res
       .status(err.status || 500)
       .json({ success: false, message: err.message });
