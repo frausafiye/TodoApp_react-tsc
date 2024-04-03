@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-//import cors from "cors";
+import cors from "cors";
 import { json } from "body-parser";
 const app = express();
 import cookieParser from "cookie-parser";
@@ -43,9 +43,35 @@ const setCors = (req: Request, res: Response, next: NextFunction) => {
 
 app.use(json());
 app.use(cookieParser());
-//app.use(cors);
-app.use(setCors);
+const allowedOrigins = ["http://localhost:3000"];
 
+const options: cors.CorsOptions = {
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+app.options(
+  "*",
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log("options came"); //success!
+    next();
+  },
+  cors(options),
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log("after cors");
+    res.send({ success: true, message: "deleted" });
+  }
+);
+app.delete(
+  "*",
+  (req: Request, res: Response, next: NextFunction) =>
+    console.log("delete came"), //no success!!
+  cors(options),
+  (req: Request, res: Response, next: NextFunction) =>
+    res.send({ success: true, message: "deleted" })
+);
+app.use(cors(options));
 app.use("/todos", todoRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   //universal response sender:

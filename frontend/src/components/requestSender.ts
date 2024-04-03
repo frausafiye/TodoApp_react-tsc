@@ -8,7 +8,6 @@ export const requestSender = async (
 ) => {
   try {
     let route = routeName === "" ? "/" : `/${routeName}/`;
-    console.log(`${process.env.REACT_APP_BASE_URL}`);
     const response = await axios({
       method: method,
       withCredentials: true,
@@ -20,8 +19,10 @@ export const requestSender = async (
       },
       data: obj ? obj.body : null,
     });
+    console.log(response.data);
     return response.data;
   } catch (err) {
+    console.log(err);
     return { error: err };
   }
 };

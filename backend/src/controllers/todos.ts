@@ -16,8 +16,6 @@ export const createTodo: RequestHandler = async (req, res, next) => {
     const userId = req["user"];
     const document = await saveDocument("todos", new Todo(text, false, userId));
     req.body.document = document;
-    //@firebase/firestore: Firestore (9.1.3): Connection GRPC stream error. Code: 7 Message: 7 PERMISSION_DENIED: Missing or insufficient permissions.
-    console.log(req.body.document.success); //false
     req.body.message = "new todo saved into db";
     next();
   } catch (error) {
@@ -29,7 +27,13 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 export const getTodos: RequestHandler = async (req, res, next) => {
   const userId = req["user"];
   try {
+    console.log("trying getting todos");
+    console.log("userId: ", userId);
     const documents = await getDocumentsFromCollection("todos", userId);
+    // documents:  {
+    //   [1]   success: false,
+    //   [1]   error: Error [FirebaseError]: Missing or insufficient permissions.
+
     req.body.document = documents;
     req.body.message = "todos sent";
     next();

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const express_1 = __importDefault(require("express"));
-//import cors from "cors";
+const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = require("body-parser");
 const app = (0, express_1.default)();
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
@@ -39,8 +39,22 @@ const setCors = (req, res, next) => {
 };
 app.use((0, body_parser_1.json)());
 app.use((0, cookie_parser_1.default)());
-//app.use(cors);
-app.use(setCors);
+const allowedOrigins = ["http://localhost:3000"];
+const options = {
+    origin: allowedOrigins,
+    optionsSuccessStatus: 200,
+    credentials: true,
+};
+app.options("*", (req, res, next) => {
+    console.log("options came"); //success!
+    next();
+}, (0, cors_1.default)(options), (req, res, next) => {
+    console.log("after cors");
+    res.send({ success: true, message: "deleted" });
+});
+app.delete("*", (req, res, next) => console.log("delete came"), //no success!!
+(0, cors_1.default)(options), (req, res, next) => res.send({ success: true, message: "deleted" }));
+app.use((0, cors_1.default)(options));
 app.use("/todos", todos_1.default);
 app.use((req, res, next) => {
     //universal response sender:
