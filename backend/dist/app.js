@@ -26,17 +26,22 @@ exports.db = (0, firestore_1.getFirestore)();
 //routes
 const todos_1 = __importDefault(require("./routes/todos"));
 const error_1 = __importDefault(require("./error"));
-//
 //cors:
-const setCors = (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
-    res.header("Access-Control-Expose-Headers", "*");
-    res.header("Vary", "Origin");
-    next();
-};
+// const setCors = (req: Request, res: Response, next: NextFunction) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+//   );
+//   res.header("Access-Control-Expose-Headers", "*");
+//   res.header("Vary", "Origin");
+//   next();
+// };
 app.use((0, body_parser_1.json)());
 app.use((0, cookie_parser_1.default)());
 const allowedOrigins = ["http://localhost:3000"];
@@ -44,16 +49,9 @@ const options = {
     origin: allowedOrigins,
     optionsSuccessStatus: 200,
     credentials: true,
+    methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 };
-app.options("*", (req, res, next) => {
-    console.log("options came"); //success!
-    next();
-}, (0, cors_1.default)(options), (req, res, next) => {
-    console.log("after cors");
-    res.send({ success: true, message: "deleted" });
-});
-app.delete("*", (req, res, next) => console.log("delete came"), //no success!!
-(0, cors_1.default)(options), (req, res, next) => res.send({ success: true, message: "deleted" }));
 app.use((0, cors_1.default)(options));
 app.use("/todos", todos_1.default);
 app.use((req, res, next) => {
@@ -67,14 +65,11 @@ app.use((req, res, next) => {
             });
         }
         else {
-            console.log("here");
-            console.log();
             next(req.body.document.error);
         }
         //route not found:
     }
     else {
-        console.log("hereeee");
         let error = new error_1.default("no matching routes found", 404);
         next(error);
     }

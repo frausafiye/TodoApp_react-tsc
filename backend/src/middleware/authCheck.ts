@@ -8,9 +8,7 @@ class Middleware {
       if (req.headers.authorization) {
         const token = (<string>req.headers.authorization).split(" ")[1];
         const decodeValue = await admin.auth().verifyIdToken(token);
-        console.log(decodeValue);
         if (decodeValue) {
-          console.log(decodeValue);
           const user = decodeValue;
           req["user"] = user.uid;
           next();

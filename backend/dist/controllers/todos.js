@@ -5,7 +5,6 @@ const todo_1 = require("../models/todo");
 const db_1 = require("../db");
 const createTodo = async (req, res, next) => {
     try {
-        console.log("trying to create");
         const text = req.body.text;
         const userId = req["user"];
         const document = await (0, db_1.saveDocument)("todos", new todo_1.Todo(text, false, userId));
@@ -14,7 +13,6 @@ const createTodo = async (req, res, next) => {
         next();
     }
     catch (error) {
-        console.log("error in creating todo");
         next(error);
     }
 };
@@ -22,12 +20,7 @@ exports.createTodo = createTodo;
 const getTodos = async (req, res, next) => {
     const userId = req["user"];
     try {
-        console.log("trying getting todos");
-        console.log("userId: ", userId);
         const documents = await (0, db_1.getDocumentsFromCollection)("todos", userId);
-        // documents:  {
-        //   [1]   success: false,
-        //   [1]   error: Error [FirebaseError]: Missing or insufficient permissions.
         req.body.document = documents;
         req.body.message = "todos sent";
         next();
@@ -76,7 +69,6 @@ const updateTodo = async (req, res, next) => {
 exports.updateTodo = updateTodo;
 const deleteTodo = async (req, res, next) => {
     try {
-        console.log("delete controller");
         const { id } = req.params;
         const document = await (0, db_1.deleteDocument)("todos", { id: id });
         req.body.document = document;
@@ -89,9 +81,3 @@ const deleteTodo = async (req, res, next) => {
     }
 };
 exports.deleteTodo = deleteTodo;
-//import { Request, Response, NextFunction } from "express";
-// export const createTodo = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {};

@@ -23,23 +23,22 @@ export const db = getFirestore();
 //routes
 import todoRoutes from "./routes/todos";
 import ErrorMiddleware from "./error";
-//
 //cors:
-const setCors = (req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,PUT,POST,PATCH,DELETE,OPTIONS"
-  );
-  res.header("Access-Control-Expose-Headers", "*");
-  res.header("Vary", "Origin");
-  next();
-};
+// const setCors = (req: Request, res: Response, next: NextFunction) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+//   );
+//   res.header("Access-Control-Expose-Headers", "*");
+//   res.header("Vary", "Origin");
+//   next();
+// };
 
 app.use(json());
 app.use(cookieParser());
@@ -49,28 +48,10 @@ const options: cors.CorsOptions = {
   origin: allowedOrigins,
   optionsSuccessStatus: 200,
   credentials: true,
+  methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.options(
-  "*",
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log("options came"); //success!
-    next();
-  },
-  cors(options),
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log("after cors");
-    res.send({ success: true, message: "deleted" });
-  }
-);
-app.delete(
-  "*",
-  (req: Request, res: Response, next: NextFunction) =>
-    console.log("delete came"), //no success!!
-  cors(options),
-  (req: Request, res: Response, next: NextFunction) =>
-    res.send({ success: true, message: "deleted" })
-);
 app.use(cors(options));
 app.use("/todos", todoRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -83,13 +64,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         document: req.body.document.data,
       });
     } else {
-      console.log("here");
-      console.log();
       next(req.body.document.error);
     }
     //route not found:
   } else {
-    console.log("hereeee");
     let error = new ErrorMiddleware("no matching routes found", 404);
     next(error);
   }

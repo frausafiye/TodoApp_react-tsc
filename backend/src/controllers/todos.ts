@@ -11,7 +11,6 @@ import { RequestHandler } from "express";
 
 export const createTodo: RequestHandler = async (req, res, next) => {
   try {
-    console.log("trying to create");
     const text = (req.body as { text: string }).text;
     const userId = req["user"];
     const document = await saveDocument("todos", new Todo(text, false, userId));
@@ -19,7 +18,6 @@ export const createTodo: RequestHandler = async (req, res, next) => {
     req.body.message = "new todo saved into db";
     next();
   } catch (error) {
-    console.log("error in creating todo");
     next(error);
   }
 };
@@ -27,12 +25,7 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 export const getTodos: RequestHandler = async (req, res, next) => {
   const userId = req["user"];
   try {
-    console.log("trying getting todos");
-    console.log("userId: ", userId);
     const documents = await getDocumentsFromCollection("todos", userId);
-    // documents:  {
-    //   [1]   success: false,
-    //   [1]   error: Error [FirebaseError]: Missing or insufficient permissions.
 
     req.body.document = documents;
     req.body.message = "todos sent";
@@ -84,7 +77,6 @@ export const deleteTodo: RequestHandler<{
   id: string;
 }> = async (req, res, next) => {
   try {
-    console.log("delete controller");
     const { id } = req.params;
     const document = await deleteDocument("todos", { id: id });
     req.body.document = document;
@@ -95,10 +87,3 @@ export const deleteTodo: RequestHandler<{
     next(error);
   }
 };
-
-//import { Request, Response, NextFunction } from "express";
-// export const createTodo = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {};

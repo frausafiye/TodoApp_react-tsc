@@ -6,7 +6,6 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function Profile(): ReactElement {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
-  console.log(currentUser);
 
   const logoutGoogle = async () => {
     await signOut(auth);

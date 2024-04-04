@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const requestSender = async (
   routeName: string,
-  method: "get" | "post" | "patch" | "delete",
+  method: "get" | "post" | "patch" | "put",
   obj: { body: object | null; params: string },
   token?: string
 ) => {
@@ -19,7 +19,6 @@ export const requestSender = async (
       },
       data: obj ? obj.body : null,
     });
-    console.log(response.data);
     return response.data;
   } catch (err) {
     console.log(err);

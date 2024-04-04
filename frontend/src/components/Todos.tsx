@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import DoneList from "./DonesList";
 import NewTodo from "./NewTodo";
 import { requestSender } from "./requestSender";
@@ -54,17 +54,15 @@ export default function Todos(): ReactElement {
     }
   };
   const deleteHandler = async (id: string) => {
-    console.log(id);
     const response = await requestSender(
-      "todos",
-      "delete",
+      "todos/delete",
+      "post", //a way around because of firestore restrictions
       {
-        body: null,
+        body: {},
         params: id,
       },
       token
     );
-    console.log(response);
     if (response.success) {
       fetchAndSetTodos(token);
     } else {
