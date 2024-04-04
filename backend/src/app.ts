@@ -3,17 +3,20 @@ import cors from "cors";
 import { json } from "body-parser";
 const app = express();
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+dotenv.config();
 
 //firebase initializing
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
-  authDomain: "deft-effect-295213.firebaseapp.com",
-  projectId: "deft-effect-295213",
-  storageBucket: "deft-effect-295213.appspot.com",
-  messagingSenderId: "943567395085",
-  appId: "1:943567395085:web:8e13067bc411a65262b844",
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
 
 // Initialize Firebase
