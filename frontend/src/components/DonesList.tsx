@@ -11,6 +11,7 @@ const DoneList: React.FC<DoneListProps> = (props) => {
   return (
     <>
       <ul className="dones-list">
+        {props.items.length === 0 && <li>No items</li>}
         {props.items.map((doneItem) => (
           <li key={doneItem.id}>
             <span>{doneItem.text}</span>
