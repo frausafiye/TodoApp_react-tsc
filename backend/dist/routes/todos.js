@@ -9,7 +9,21 @@ const authCheck_1 = __importDefault(require("../middleware/authCheck"));
 const router = express_1.Router();
 router.post("/", authCheck_1.default.decodetoken, todos_1.createTodo);
 router.get("/", authCheck_1.default.decodetoken, todos_1.getTodos);
-router.get("/:id", authCheck_1.default.decodetoken, todos_1.getSingleTodo);
-router.patch("/:id", authCheck_1.default.decodetoken, todos_1.updateTodo);
-router.delete("/:id", authCheck_1.default.decodetoken, todos_1.deleteTodo);
+// router.get("/:id", middleware.decodetoken, getSingleTodo);
+router.patch("/:id", (req, res, next) => {
+    console.log(req.params);
+    next();
+}, authCheck_1.default.decodetoken, todos_1.updateTodo);
+// router.delete('/'
+//   (req, res, next) => {
+//     console.log(req.params);
+//     next();
+//   },
+//   middleware.decodetoken,
+//   deleteTodo
+// );
+router.delete("/:id", (req, res, next) => {
+    console.log(req.params);
+    next();
+}, authCheck_1.default.decodetoken, todos_1.deleteTodo);
 exports.default = router;

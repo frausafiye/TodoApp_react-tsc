@@ -1,8 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
-//import cors from "cors";
+import cors from "cors";
 import { json } from "body-parser";
 const app = express();
 const cookieParser = require("cookie-parser");
+import morgan from "morgan";
+app.use(morgan("dev"));
 
 //firebase initializing
 import { initializeApp } from "firebase/app";
@@ -23,27 +25,49 @@ import todoRoutes from "./routes/todos";
 import ErrorMiddleware from "./error";
 //
 //cors:
-const setCors = (req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,PUT,POST,PATCH,DELETE,OPTIONS"
-  );
-  res.header("Access-Control-Expose-Headers", "*");
-  res.header("Vary", "Origin");
-  next();
-};
+// const setCors = (req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, x-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "POST, GET, PUT, PATCH, DELETE, OPTIONS"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+
+//   next();
+// };
+
+// const setCors = (req: Request, res: Response, next: NextFunction) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Accept,Content-Type,Access,Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "OPTIONS,GET,PUT,POST,PATCH,DELETE"
+//   );
+//   res.header("Access-Control-Expose-Headers", "*");
+//   res.header("Vary", "Origin");
+//   next();
+// };
 
 app.use(json());
 app.use(cookieParser());
-//app.use(cors);
-app.use(setCors);
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: true,
+    optionsSuccessStatus: 204,
+    credentials: true,
+  })
+);
+//app.use(setCors);dilfh
 app.use("/todos", todoRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   //universal response sender:

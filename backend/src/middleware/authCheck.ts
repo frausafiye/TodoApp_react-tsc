@@ -9,6 +9,7 @@ class Middleware {
       if (req.headers.authorization) {
         console.log("here");
         const token = (<string>req.headers.authorization).split(" ")[1];
+        console.log("token", token);
         const decodeValue = await admin.auth().verifyIdToken(token);
 
         if (decodeValue) {

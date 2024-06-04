@@ -5,10 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const express_1 = __importDefault(require("express"));
-//import cors from "cors";
+const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = require("body-parser");
 const app = express_1.default();
 const cookieParser = require("cookie-parser");
+const morgan_1 = __importDefault(require("morgan"));
+app.use(morgan_1.default("dev"));
 //firebase initializing
 const app_1 = require("firebase/app");
 const firestore_1 = require("firebase/firestore");
@@ -27,19 +29,44 @@ const todos_1 = __importDefault(require("./routes/todos"));
 const error_1 = __importDefault(require("./error"));
 //
 //cors:
-const setCors = (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,PATCH,DELETE,OPTIONS");
-    res.header("Access-Control-Expose-Headers", "*");
-    res.header("Vary", "Origin");
-    next();
-};
+// const setCors = (req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, x-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "POST, GET, PUT, PATCH, DELETE, OPTIONS"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// };
+// const setCors = (req: Request, res: Response, next: NextFunction) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Accept,Content-Type,Access,Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "OPTIONS,GET,PUT,POST,PATCH,DELETE"
+//   );
+//   res.header("Access-Control-Expose-Headers", "*");
+//   res.header("Vary", "Origin");
+//   next();
+// };
 app.use(body_parser_1.json());
 app.use(cookieParser());
-//app.use(cors);
-app.use(setCors);
+app.use(cors_1.default({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: true,
+    optionsSuccessStatus: 204,
+    credentials: true,
+}));
+//app.use(setCors);dilfh
 app.use("/todos", todos_1.default);
 app.use((req, res, next) => {
     //universal response sender:
