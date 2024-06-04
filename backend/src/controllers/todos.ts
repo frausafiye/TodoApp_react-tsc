@@ -26,6 +26,7 @@ export const getTodos: RequestHandler = async (req, res, next) => {
   const userId = req["user"];
   try {
     const documents = await getDocumentsFromCollection("todos", userId);
+
     req.body.document = documents;
     req.body.message = "todos sent";
     next();
@@ -76,7 +77,6 @@ export const deleteTodo: RequestHandler<{
   id: string;
 }> = async (req, res, next) => {
   try {
-    console.log("delete controller");
     const { id } = req.params;
     const document = await deleteDocument("todos", { id: id });
     req.body.document = document;
@@ -87,10 +87,3 @@ export const deleteTodo: RequestHandler<{
     next(error);
   }
 };
-
-//import { Request, Response, NextFunction } from "express";
-// export const createTodo = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {};

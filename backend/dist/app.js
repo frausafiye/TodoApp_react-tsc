@@ -7,28 +7,29 @@ exports.db = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = require("body-parser");
-const app = express_1.default();
-const cookieParser = require("cookie-parser");
-const morgan_1 = __importDefault(require("morgan"));
-app.use(morgan_1.default("dev"));
+const app = (0, express_1.default)();
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 //firebase initializing
 const app_1 = require("firebase/app");
 const firestore_1 = require("firebase/firestore");
 const firebaseConfig = {
-    apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
-    authDomain: "deft-effect-295213.firebaseapp.com",
-    projectId: "deft-effect-295213",
-    storageBucket: "deft-effect-295213.appspot.com",
-    messagingSenderId: "943567395085",
-    appId: "1:943567395085:web:8e13067bc411a65262b844",
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
 };
-const firebase = app_1.initializeApp(firebaseConfig);
-exports.db = firestore_1.getFirestore();
+// Initialize Firebase
+const firebase = (0, app_1.initializeApp)(firebaseConfig);
+exports.db = (0, firestore_1.getFirestore)();
 //routes
 const todos_1 = __importDefault(require("./routes/todos"));
 const error_1 = __importDefault(require("./error"));
-//
 //cors:
+<<<<<<< HEAD
 // const setCors = (req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
 //   res.header(
@@ -42,21 +43,32 @@ const error_1 = __importDefault(require("./error"));
 //   res.header("Access-Control-Allow-Credentials", "true");
 //   next();
 // };
+=======
+>>>>>>> c9cb387e529498b105a19da06debb7a3586eeb27
 // const setCors = (req: Request, res: Response, next: NextFunction) => {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
 //   res.header(
 //     "Access-Control-Allow-Headers",
+<<<<<<< HEAD
 //     "Origin,X-Requested-With,Accept,Content-Type,Access,Authorization"
+=======
+//     "Origin, X-Requested-With,  Accept,Content-Type, Access,Authorization"
+>>>>>>> c9cb387e529498b105a19da06debb7a3586eeb27
 //   );
 //   res.header("Access-Control-Allow-Credentials", "true");
 //   res.header(
 //     "Access-Control-Allow-Methods",
+<<<<<<< HEAD
 //     "OPTIONS,GET,PUT,POST,PATCH,DELETE"
+=======
+//     "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+>>>>>>> c9cb387e529498b105a19da06debb7a3586eeb27
 //   );
 //   res.header("Access-Control-Expose-Headers", "*");
 //   res.header("Vary", "Origin");
 //   next();
 // };
+<<<<<<< HEAD
 app.use(body_parser_1.json());
 app.use(cookieParser());
 app.use(cors_1.default({
@@ -67,6 +79,19 @@ app.use(cors_1.default({
     credentials: true,
 }));
 //app.use(setCors);dilfh
+=======
+app.use((0, body_parser_1.json)());
+app.use((0, cookie_parser_1.default)());
+const allowedOrigins = ["http://localhost:3000"];
+const options = {
+    origin: allowedOrigins,
+    optionsSuccessStatus: 200,
+    credentials: true,
+    methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use((0, cors_1.default)(options));
+>>>>>>> c9cb387e529498b105a19da06debb7a3586eeb27
 app.use("/todos", todos_1.default);
 app.use((req, res, next) => {
     //universal response sender:

@@ -7,7 +7,7 @@ const createTodo = async (req, res, next) => {
     try {
         const text = req.body.text;
         const userId = req["user"];
-        const document = await db_1.saveDocument("todos", new todo_1.Todo(text, false, userId));
+        const document = await (0, db_1.saveDocument)("todos", new todo_1.Todo(text, false, userId));
         req.body.document = document;
         req.body.message = "new todo saved into db";
         next();
@@ -20,7 +20,7 @@ exports.createTodo = createTodo;
 const getTodos = async (req, res, next) => {
     const userId = req["user"];
     try {
-        const documents = await db_1.getDocumentsFromCollection("todos", userId);
+        const documents = await (0, db_1.getDocumentsFromCollection)("todos", userId);
         req.body.document = documents;
         req.body.message = "todos sent";
         next();
@@ -34,7 +34,7 @@ const getSingleTodo = async (req, res, next) => {
     //
     try {
         const { id } = req.params;
-        const document = await db_1.getSingleDocument("todos", { id: id });
+        const document = await (0, db_1.getSingleDocument)("todos", { id: id });
         req.body.document = document;
         req.body.message = "todo found";
         next();
@@ -56,7 +56,7 @@ const updateTodo = async (req, res, next) => {
             done: done,
             userID: userId,
         };
-        const document = await db_1.updateDocument("todos", documentObj);
+        const document = await (0, db_1.updateDocument)("todos", documentObj);
         req.body.document = document;
         req.body.message = "todo updated";
         next();
@@ -69,9 +69,8 @@ const updateTodo = async (req, res, next) => {
 exports.updateTodo = updateTodo;
 const deleteTodo = async (req, res, next) => {
     try {
-        console.log("delete controller");
         const { id } = req.params;
-        const document = await db_1.deleteDocument("todos", { id: id });
+        const document = await (0, db_1.deleteDocument)("todos", { id: id });
         req.body.document = document;
         req.body.message = "todo deleted";
         next();
@@ -82,9 +81,3 @@ const deleteTodo = async (req, res, next) => {
     }
 };
 exports.deleteTodo = deleteTodo;
-//import { Request, Response, NextFunction } from "express";
-// export const createTodo = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {};

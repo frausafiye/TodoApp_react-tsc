@@ -2,28 +2,30 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { json } from "body-parser";
 const app = express();
-const cookieParser = require("cookie-parser");
-import morgan from "morgan";
-app.use(morgan("dev"));
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+dotenv.config();
 
 //firebase initializing
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyClwiiK8_WINLb7wjn7ld03UcNmLh5b1xc",
-  authDomain: "deft-effect-295213.firebaseapp.com",
-  projectId: "deft-effect-295213",
-  storageBucket: "deft-effect-295213.appspot.com",
-  messagingSenderId: "943567395085",
-  appId: "1:943567395085:web:8e13067bc411a65262b844",
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
+
+// Initialize Firebase
 const firebase = initializeApp(firebaseConfig);
 export const db = getFirestore();
 
 //routes
 import todoRoutes from "./routes/todos";
 import ErrorMiddleware from "./error";
-//
 //cors:
 // const setCors = (req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -58,16 +60,17 @@ import ErrorMiddleware from "./error";
 
 app.use(json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: true,
-    optionsSuccessStatus: 204,
-    credentials: true,
-  })
-);
-//app.use(setCors);dilfh
+const allowedOrigins = ["http://localhost:3000"];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200,
+  credentials: true,
+  methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(options));
 app.use("/todos", todoRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   //universal response sender:

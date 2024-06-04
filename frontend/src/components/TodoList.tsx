@@ -11,6 +11,7 @@ const TodoList: React.FC<TodoListProps> = (props) => {
   return (
     <>
       <ul className="todo-list">
+        {props.items.length === 0 && <li>No items</li>}
         {props.items.map((todo) => (
           <li key={todo.id}>
             <span>{todo.text}</span>

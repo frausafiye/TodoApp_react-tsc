@@ -8,10 +8,8 @@ const admin = require("../config/firebase-config");
 class Middleware {
     constructor() {
         this.decodetoken = async (req, res, next) => {
-            console.log("here1");
             try {
                 if (req.headers.authorization) {
-                    console.log("here");
                     const token = req.headers.authorization.split(" ")[1];
                     console.log("token", token);
                     const decodeValue = await admin.auth().verifyIdToken(token);

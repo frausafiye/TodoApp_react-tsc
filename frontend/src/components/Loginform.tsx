@@ -92,7 +92,7 @@ const Loginform: React.FC = () => {
             <div className="google-icon-wrapper">
               <img
                 className="google-icon-svg"
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                src="https://logosandtypes.com/wp-content/uploads/2020/11/Google.png"
                 alt="google icon"
               />
             </div>
